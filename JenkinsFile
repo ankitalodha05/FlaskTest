@@ -35,12 +35,12 @@ pipeline {
         success {
             emailext subject: "Jenkins Build Success: ${JOB_NAME}",
                      body: "Build #${BUILD_NUMBER} for ${JOB_NAME} succeeded.\nCheck: ${BUILD_URL}",
-                     to: 'ankitalodha05@gmai.com'
+                     to: 'ankitalodha05@gmail.com'
         }
         failure {
             emailext subject: "Jenkins Build Failed: ${JOB_NAME}",
                      body: "Build for ${JOB_NAME} failed.\nCheck logs: ${BUILD_URL}",
-                     to: 'ankitalodha05@gmai.com'
+                     to: 'ankitalodha05@gmail.com'
         }
     }
 }
