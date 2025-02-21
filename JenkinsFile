@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+    
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ankitalodha05/FlaskTest.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                sh 'pytest --junitxml=test-results.xml'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sh 'nohup python3 app.py > flask.log 2>&1 &'
+            }
+        }
+    }
+
+    post {
+        success {
+            emailext subject: "Jenkins Build Success: ${JOB_NAME}",
+                     body: "Build #${BUILD_NUMBER} for ${JOB_NAME} succeeded.\nCheck: ${BUILD_URL}",
+                     to: 'ankitalodha05@gmai.com'
+        }
+        failure {
+            emailext subject: "Jenkins Build Failed: ${JOB_NAME}",
+                     body: "Build for ${JOB_NAME} failed.\nCheck logs: ${BUILD_URL}",
+                     to: 'ankitalodha05@gmai.com'
+        }
+    }
+}
